@@ -10,33 +10,45 @@
   stat: path=/etc/yunohost/installed
   register: yunohost_file_install
 
+- name: Test if Yunohost is package is present
+  command: dpkg -l yunohost -q &> /dev/null && true
+  ignore_errors: yes
+  register: yunohost_pkg_present
+  failed_when: False
+
 - name: Download install script
   get_url:
-    url: "{{ yunohost.install_script_url }}"
+    url: "{{ ynh_install_script.url }}"
     dest: /tmp/install_yunohost.sh
     mode: 700
-  when: yunohost_file_install.stat.exists == False
+    checksum: "{{ ynh_install_script.checksum }}"
+  when: 
+    - yunohost_file_install.stat.exists == False
+    - yunohost_pkg_present
 
 - name: Launch script
   command: /tmp/install_yunohost.sh -a
-  when: yunohost_file_install.stat.exists == False
+  when: 
+    - yunohost_file_install.stat.exists == False
+    - yunohost_pkg_present
 
-- name: Launch postinsstall
-  shell: "
-    yunohost tools postinstall \
+- name: Launch postinstall
+  shell: yunohost tools postinstall \
       --domain {{ yunohost.domain }} \
-      --password {{ yunohost.password }} \
+      --password {{ '%s' | format(yunohost.password) | quote }} \
       {% if yunohost.ignore_dyndns == True %} --ignore-dyndns {% endif %}
-      "
-  when: yunohost_file_install.stat.exists == False
+  when: 
+    - yunohost_file_install.stat.exists == False
 
 - name: Create domains
   include: domains.yml
   when: yunohost.extra_domains
 
-- name: Install certificates
-  shell: yunohost domain cert-install
-  changed_when: False
+- name: Fix certificates installation
+  get_url:
+    url: https://raw.githubusercontent.com/diafygi/acme-tiny/master/acme_tiny.py
+    dest: /usr/lib/moulinette/yunohost/vendor/acme_tiny/acme_tiny.py
+    checksum: sha256:53fa7f0782324c2451efde0220e599789289ce9e14c778d1c32da27c3ddc9283
 
 - name: Add users
   include: users.yml

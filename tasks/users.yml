@@ -9,10 +9,10 @@
 
 - name: Create missing users
   shell: |
-    yunohost user create {{ item.name }} --admin-password {{ yunohost.password }} \
+    yunohost user create {{ item.name }} --admin-password {{ '%s' | format(yunohost.password) | quote }} \
     -f {{ item.firstname }} \
     -l {{ item.lastname }} \
     -m {{ item.mail }} \
-    -p {{ item.pass }}
+    -p {{ '%s' | format(item.pass) | quote }}
   with_items: "{{ yunohost.users }}"
   when: item.name not in yunohost_registered_users.users.keys()

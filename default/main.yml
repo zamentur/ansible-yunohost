@@ -1,5 +1,8 @@
+
+ynh_install_script:
+  url: https://install.yunohost.org/install_yunohost
+  checksum: sha256:e67034fbe38a051108521a0c3b41e5fa26fbd60a8de9fd1df36a0580e88ac501
 yunohost:
-  install_script_url: https://raw.githubusercontent.com/YunoHost/install_script/master/install_yunohost
   domain: example.com
   extra_domains: ~
   password: MYINSECUREPWD_PLZ_OVERRIDE_THIS

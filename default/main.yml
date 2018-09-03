@@ -1,7 +1,7 @@
 
 ynh_install_script:
-  url: https://install.yunohost.org/install_yunohost
-  checksum: sha256:e67034fbe38a051108521a0c3b41e5fa26fbd60a8de9fd1df36a0580e88ac501
+  url: https://install.yunohost.org
+  checksum: sha256:77bb68faac6dc09e1d17a64719e86f9717ea0a0a701ab895cae28a969788e0d9
 yunohost:
   domain: example.com
   extra_domains: ~

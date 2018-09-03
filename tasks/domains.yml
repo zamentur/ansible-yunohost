@@ -12,12 +12,6 @@
   with_items: "{{ yunohost.extra_domains }}"
   when: item not in yunohost_installed_domains.domains
 
-- name: Fix certificates installation
-  get_url:
-    url: https://raw.githubusercontent.com/diafygi/acme-tiny/master/acme_tiny.py
-    dest: /usr/lib/moulinette/yunohost/vendor/acme_tiny/acme_tiny.py
-    checksum: sha256:53fa7f0782324c2451efde0220e599789289ce9e14c778d1c32da27c3ddc9283
-
 - name: Install certificates
   shell: yunohost domain cert-install
   changed_when: False

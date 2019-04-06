@@ -12,9 +12,10 @@
 
 - name: Download install script
   get_url:
-    url: "{{ yunohost.install_script_url }}"
+    url: "{{ ynh_install_script.url }}"
     dest: /tmp/install_yunohost.sh
     mode: 700
+    checksum: "sha256:{{ ynh_install_script.checksum }}"
   when: yunohost_file_install.stat.exists == False
 
 - name: Launch script
